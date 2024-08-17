@@ -1,196 +1,146 @@
-"use client";
-import {
-  Typography,
-  Box,
-  Button,
-  useTheme,
-  useMediaQuery,
-  Container,
-} from "@mui/material";
-import getStripe from "@/utils/get-stripe";
-import { DefaultRightContent } from "./components/Navbar";
-import Navbar from "./components/Navbar";
-import icons from "./icons";
-import Image from "next/image";
-import Head from "next/head";
-import Features from "./components/Features";
-import dollarIcon from "@/public/icons/dollar.png";
+'use client'
 
-export default function Home() {
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+import React from 'react';
+import { AppBar, Toolbar, Typography, Button, Box, Grid, Container } from '@mui/material';
+import { SignedOut, SignedIn, UserButton } from '@clerk/nextjs';
+import getStripe from '@/utils/get-stripe'
+import Head from 'next/head'
 
+
+export default function HomePage() {
+    const handleSubmit = async () => {
+      const checkoutSession = await fetch('/api/checkout_sessions', {
+        method: 'POST',
+        headers: { origin: 'http://localhost:3000' },
+      })
+
+    const checkoutSessionJson = await checkoutSession.json()
+  
+    const stripe = await getStripe()
+    const {error} = await stripe.redirectToCheckout({
+      sessionId: checkoutSessionJson.id,
+    })
+  
+    if (error) {
+      console.warn(error.message)
+    }
+  }
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-        overflow: "hidden",
-        bgcolor: "background.main",
-      }}
-    >
-      <Navbar rightContent={<DefaultRightContent />} />
+    <Container maxWidth="100vw">
       <Head>
-        <title>Flashcards Saas</title>
-        <meta property="description" content="Flashcards created with AI" />
+        <title>FlashCard SaaS</title>
+        <meta name="description" content="Create flashcard from your text"/>
       </Head>
+    
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" style={{ flexGrow: 1 }}>
+            Flashcard SaaS
+          </Typography>
+          <SignedOut>
+            <Button color="inherit" href="/sign-in">Login</Button>
+            <Button color="inherit" href="/sign-up">Sign Up</Button>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+        </Toolbar>
+      </AppBar>
 
-      <Box
-        sx={{
-          display: "flex",
-          flexGrow: 1,
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          mt: 4,
-        }}
-      >
-        {/* Floating Icons */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            gap: { xs: 2, sm: 4, md: 6 },
-            mb: 4,
-          }}
-        >
-          {icons.map((icon, index) => (
-            <Box
-              key={index}
-              width={isSmallScreen ? 60 : 130}
-              height={isSmallScreen ? 60 : 130}
-              sx={{
-                borderRadius: "50%",
-                borderColor: "white",
-                borderWidth: 2,
-                borderStyle: "solid",
-                overflow: "hidden",
-                position: "relative",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                animation: `float ${
-                  2 + index * 0.5
-                }s ease-in-out infinite alternate`, //animation named float, duration is 2 to 3.5 seconds based on index of icon
-                "@keyframes float": {
-                  "0%": {
-                    transform: "translateY(-10px)", // Move up 10px
-                  },
-                  "100%": {
-                    transform: "translateY(10px)", // Move down 10px
-                  },
-                },
-              }}
-            >
-              <Image
-                src={icon.src}
-                alt={icon.alt}
-                width={isSmallScreen ? 30 : 100}
-                height={isSmallScreen ? 30 : 100}
-                style={{ objectFit: "cover" }}
-              />
-            </Box>
-          ))}
-        </Box>
-
-        {/* Main Content */}
-        <Typography
-          variant={isSmallScreen ? "h3" : "h2"}
-          align="center"
-          color="secondary.main"
-          sx={{
-            fontWeight: "bold",
-            transform: "translateZ(0)",
-            transition: "transform 0.7s ease-out",
-            "&:hover": {
-              transform: "translateY(-10px) translateZ(0)",
-            },
-            mb: 2,
-          }}
-        >
-          FlashUI
+      <Box sx={{ textAlign: 'center', my: 4 }}>
+        <Typography variant="h2" component="h1" gutterBottom>
+          Welcome to Flashcard SaaS
         </Typography>
-        <Typography
-          variant={isSmallScreen ? "h6" : "h4"}
-          align="center"
-          color="tertiary.main"
-        >
-          Supercharge Your UI Learning with AI-Powered Flashcards
+        <Typography variant="h5" component="h2" gutterBottom>
+          The easiest way to create flashcards from your text.
         </Typography>
-        <Button variant="contained" color="primary" sx={{ mt: 6 }}>
+        <Button variant="contained" color="primary" sx={{ mt: 2, mr: 2 }} href="/generate">
           Get Started
         </Button>
+        <Button variant="outlined" color="primary" sx={{ mt: 2 }}>
+          Learn More
+        </Button>
+      </Box>
 
-        {/* Features */}
-        <Features />
-
-        {/* Pricing*/}
-        <Container
-          maxWidth="md"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            py: 8,
-          }}
-        >
-          <Typography
-            variant="h3"
-            align="center"
-            gutterBottom
-            color="secondary.main"
-            sx={{ mb: 4 }}
-          >
-            Pricing
+      <Box sx={{ my: 6 ,textAlign: 'center'}}>
+        <Typography variant="h4" component="h2" gutterBottom>
+          Features
+        </Typography>
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={4}>
+        <Typography variant="h6">Easy Text Input</Typography>
+        <Typography>
+          {/* Feature items go here */}
+          Simply input your text and let our software do the rest. Creating 
+          flashcards has never been easier.
+          </Typography> 
+          </Grid>
+          <Grid item xs={12} md={4}>
+        <Typography variant="h6">Smart flashcards</Typography>
+        <Typography>
+          {/* Feature items go here */}
+          Our AI intelligently breaks down your text into concise
+          flashcards, perfect for studying.
           </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: isSmallScreen ? "column" : "row",
-              justifyContent: "space-between",
+          </Grid>
+          <Grid item xs={12} md={4}>
+        <Typography variant="h6">Accessible Anywhere</Typography>
+        <Typography>
+          {/* Feature items go here */}
+          Access your flashcards from any device,at any time.Study on the go with ease.
+          </Typography>
+          </Grid>
+        </Grid>
+      </Box>
+
+      <Box sx={{ my: 6, textAlign: 'center' }}>
+        <Typography variant="h4" component="h2" gutterBottom>
+          Pricing
+        </Typography>
+        <Grid container spacing={4} justifyContent="center">
+          <Grid item xs={12} md={6}>
+            <Box sx={{
+              p: 3,
+              border: '1px solid',
+              borderColor: 'grey.300',
+              borderRadius: 2
             }}
           >
-            <Box>
-              <Typography variant="h4">
-                Get Started with FlashUI for Only $1/Month
-              </Typography>
-              <Typography variant="h5" color="white">
-                Only for a limited time
-              </Typography>
-              <Typography variant="h6" color="tertiary.main" sx={{ mt: 4 }}>
-                &quot;Simple, Affordable, Effective&quot;
-              </Typography>
-              <Typography variant="body1" color="white">
-                For just $1 a month, gain access to all the powerful features of
-                FlashUI. Enhance your UI skills without breaking the bank.
-              </Typography>
-              <Button variant="contained" color="primary" sx={{ mt: 6 }}>
-                Get Started
-              </Button>
+            <Typography variant="h5" gutterBottom>Basic</Typography>
+            <Typography variant="h6" gutterBottom>Free</Typography>
+            <Typography>
+              {' '}
+              Access to basic flashcard features and limited storage.
+            </Typography>
+            <Button variant="contained" color="primary" sx={{mt: 2}} href="/generate">
+              Choose basic
+            </Button>
+          </Box>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+        <Box sx={{
+          p: 3,
+          border: '1px solid',
+          borderColor: 'grey.300',
+          borderRadius: 2
+        }}
+      >
+            <Typography variant="h5" gutterBottom>Pro</Typography>
+            <Typography variant="h6" gutterBottom>$7 / month</Typography>
+            <Typography>
+              {' '}
+              Access to unlimited flashcard features and much more storage.
+            </Typography>
+            <Button variant="contained" color="primary" sx={{mt: 2}} onClick={handleSubmit}>
+              Choose Pro
+            </Button>
+
             </Box>
 
-            <Box
-              width={isSmallScreen ? 100 : 130}
-              height={isSmallScreen ? 100 : 130}
-              sx={{
-                overflow: "hidden",
-                position: "relative",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Image
-                src={dollarIcon}
-                alt={"price"}
-                width={isSmallScreen ? 80 : 100}
-                height={isSmallScreen ? 80 : 100}
-                style={{ objectFit: "cover" }}
-              />
-            </Box>
-          </Box>
-        </Container>
+          </Grid>
+        </Grid>
       </Box>
-    </Box>
+    </Container>
   );
 }
