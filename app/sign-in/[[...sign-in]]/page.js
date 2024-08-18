@@ -11,7 +11,7 @@ export default function SignInPage() {
         <Typography variant="h6" sx={{
           flexGrow: 1
         }} gutterBottom>
-        Sign In to Flashcard SaaS
+        Sign In to Revision Race
         </Typography>
         <Button color='inherit'>
           <Link href="/sign-in" passHref>

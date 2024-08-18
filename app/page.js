@@ -5,7 +5,7 @@ import { AppBar, Toolbar, Typography, Button, Box, Grid, Container } from '@mui/
 import { SignedOut, SignedIn, UserButton } from '@clerk/nextjs';
 import getStripe from '@/utils/get-stripe'
 import Head from 'next/head'
-
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
 export default function HomePage() {
     const handleSubmit = async () => {
@@ -28,14 +28,14 @@ export default function HomePage() {
   return (
     <Container maxWidth="100vw">
       <Head>
-        <title>FlashCard SaaS</title>
+        <title>Revision Race</title>
         <meta name="description" content="Create flashcard from your text"/>
       </Head>
     
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" style={{ flexGrow: 1 }}>
-            Flashcard SaaS
+            Revision Race <span aria-label="a rocket blasting off" role="img">🚀</span>
           </Typography>
           <SignedOut>
             <Button color="inherit" href="/sign-in">Login</Button>
@@ -49,7 +49,7 @@ export default function HomePage() {
 
       <Box sx={{ textAlign: 'center', my: 4 }}>
         <Typography variant="h2" component="h1" gutterBottom>
-          Welcome to Flashcard SaaS
+          Welcome to Revision Race <span aria-label="a rocket blasting off" role="img">🚀</span>
         </Typography>
         <Typography variant="h5" component="h2" gutterBottom>
           The easiest way to create flashcards from your text.
